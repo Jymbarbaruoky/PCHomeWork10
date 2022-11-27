@@ -25,32 +25,32 @@ def add(data: list) -> None:
     if not (data[1]).isnumeric():
         raise ValueError
     if dict_contacts and data[0] in dict_contacts:
-        record = Record(data[0])
-        record.phones = dict_contacts[data[0]]
-        if data[1] in record.phones:
-            raise ValueError(f'This phone alredy exist in {data[0]}')
+        for phone in dict_contacts[data[0]].phones:
+            if data[1] == phone.value:
+                raise ValueError(f'This phone alredy exist in {data[0]}')
+        dict_contacts[data[0]].add_phone(data[1])
     else:
         record = Record(data[0])
-    record.add_phone(data[1])
-    dict_contacts.add_record(record)
+        record.add_phone(data[1])
+        dict_contacts.add_record(record)
 
 @input_error
 def change(data: list) -> None:
     if not (data[1]).isnumeric() or not (data[2]).isnumeric():
         raise ValueError
-    record = Record(data[0])
-    record.phones = dict_contacts[data[0]]
-    record.editing(data[1], data[2])
+    dict_contacts[data[0]].editing(data[1], data[2])
 
 @input_error
 def phone(data: list) -> str:
-    return dict_contacts[data[0]]
+    return print(f'{data[0]}: {dict_contacts[data[0]].get_contacts()}')
 
 @input_error
 def show_all() -> dict:
     if not dict_contacts:
         return 'The contact list is empty'
-    return dict_contacts
+    print('Your contacts:')
+    for key in dict_contacts:
+        phone([key])
 
 @input_error
 def end_program():
